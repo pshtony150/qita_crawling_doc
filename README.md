@@ -1746,7 +1746,7 @@ class SafeguardListExtractor(BaseListExtractor):
         ```python
         # In src/Extractors/Paginator/paginator.py
 
-        def next_page(self)
+        def next_page(self):
             self.next_button.click()
             self.next_button = self.extract_next_button()
         ```
