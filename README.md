@@ -871,20 +871,20 @@
                     아래와 같이 위에서 설명한 로직의 최소 단위들을 리스트내에 담으면 됩니다.
 
                     ```json
-                    "if": [
+					"if": [
 						{
 							"keyword_sets": [
 								"A",
-                                "B",
-                                "C",
-                                "D"
+								"B",
+								"C",
+								"D"
 							],
 							"use_nlp": false
 						},
 						{
 							"keyword_sets": [
 								"A",
-                                ["not", "D"]
+								["not", "D"]
 							],
 							"use_nlp": true
 						}
