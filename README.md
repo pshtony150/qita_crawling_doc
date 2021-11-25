@@ -26,6 +26,10 @@
 
 <br />
 
+### **목차**
+
+<br />
+
 ## **Project Settings**
 
 ### Install & Update Dependencies
@@ -377,8 +381,10 @@
             | -- | -- | -- |
             | string | 모든 문자열 | `""` (빈 문자열) |
 
-            해당 값들을 설정하게 되면, export 된 엑셀파일의 column에 해당 값들을 넣을 수 있습니다.  
-            또한, 굳이 값들을 설정하지 않더라도 실행에는 지장이 없습니다(예외 존재. 아래 참고).
+            해당 값들을 설정하게 되면, export 된 엑셀파일의 column에 해당 값들을 **강제적으로** 넣을 수 있습니다.  
+            **문서 크롤링 모드**에서는 문서의 정보(`cou`, `doc1`)등은 크롤링하지 않기 때문에 
+
+            또한, 굳이 값들을 설정하지 않더라도 실행에는 지장이 없습니다(`Safeguard Exempt Extractor`에 대한 예외 존재. 아래 참고).
 
             예를 들어, 이 필드들의 값이 다음과 같이 설정되어 있다면,
 
@@ -401,10 +407,25 @@
 
             단, 위의 5개의 필드(`cou`, `doc1` 등)와 content 관련 필드를 제외한 다른 필드들(위의 예시에서 `HS`)은 값이 할당되지 않습니다.
 
-            **❗ Safeguard Exempt 중요 사항**
+            **❗ Safeguard Exempt 예외 사항**
 
-            문서 크롤링 모드를 Safeguard Exempt Extractor로 실행한다면, `cou` 필드의 값을 할당해주는 것을 권장합니다.  
-            해당 Extractor 내에는 `cou` 필드를 이용하는 로직이 존재합니다.
+            문서 크롤링 모드를 `Safeguard Exempt Extractor`로 실행한다면, `cou` 필드의 값을 **실행하는 문서와 동일한 값**으로 할당해주는 것을 권장합니다.
+
+            예를 들어, 현재 크롤링하는 문서의 `cou`가 `KOR`라면,
+
+            ```json
+            "custom_doc_info": {
+                "cou": "KOR",
+                "doc1": "",
+                "doc2": "",
+                "date": "",
+                "year": "",
+            }
+            ```
+
+            과 같이 `cou` 필드를 할당해 주는 것을 권장한다는 의미입니다.
+
+            이는 해당 Extractor 내에 `cou` 필드를 이용하는 로직이 존재하기 때문입니다.
 
     <br />
 
@@ -871,20 +892,20 @@
                     아래와 같이 위에서 설명한 로직의 최소 단위들을 리스트내에 담으면 됩니다.
 
                     ```json
-					"if": [
+                    "if": [
 						{
 							"keyword_sets": [
 								"A",
-								"B",
-								"C",
-								"D"
+                                "B",
+                                "C",
+                                "D"
 							],
 							"use_nlp": false
 						},
 						{
 							"keyword_sets": [
 								"A",
-								["not", "D"]
+                                ["not", "D"]
 							],
 							"use_nlp": true
 						}
@@ -932,8 +953,10 @@
 
                             현재 문서가 exempt 관련 문서일때만 `Table keyword logic` 실행할 것인지를 결정합니다.
 
-                            값이 `true`라면 exempt 관련 문서일때만 실행하고,
-                            값이 `false`라면 exempt 관련 문서에 상관없이 실행합니다.
+                            **현재 문서가 exempt 관련 문서**인지를 판단하는 로직은 하단의 `main_keyword_name` 옵션 필드의 설명을 확인해주세요.
+
+                            값이 `true`라면 exempt 관련 문서일때만 `Table keyword logic`을 실행하여 Table을 크롤링하고,
+                            값이 `false`라면 exempt 관련 문서인지에 상관없이 **무조건 `Table keyword logic`을 실행하여 Table을 크롤링**합니다.
 
                         <br />
 
@@ -1746,7 +1769,7 @@ class SafeguardListExtractor(BaseListExtractor):
         ```python
         # In src/Extractors/Paginator/paginator.py
 
-        def next_page(self):
+        def next_page(self)
             self.next_button.click()
             self.next_button = self.extract_next_button()
         ```
